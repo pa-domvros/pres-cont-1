@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ActionEnglish - Learn & Practice</title>
+    <style>
+        /* --- General Styles --- */
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #ECEFF1; /* Light Grey-Blue */
+            color: #333;
+            padding: 20px;
+            margin: 0;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 20px auto;
+            background: #E0F2F1; /* Soft Teal */
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative; /* Needed for positioning child elements */
+        }
+        button.nav-button {
+            display: block;
+            width: 50%;
+            margin: 40px auto 10px auto;
+            padding: 20px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: center;
+            transition: background-color 0.3s;
+        }
+        /* FIX 2: Style for the new Home button */
+        .home-button {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            background: #78909C;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .home-button:hover {
+            background: #546E7A;
+        }
+
+        /* --- Intro View Styles --- */
+        #intro-container { text-align: center; }
+        #intro-container h1 { color: #4A90E2; font-size: 2.8em; margin-bottom: 20px; }
+        #intro-container p { font-size: 1.2em; line-height: 1.6; margin-bottom: 30px; }
+        #intro-container p.credit { font-size: 1em; color: #555; margin-top: -15px; }
+        #go-to-theory-btn { background-color: #4A90E2; }
+        #go-to-theory-btn:hover { background-color: #357ABD; }
+        #intro-image {
+            max-width: 250px;
+            margin-top: 20px;
+            border-radius: 15px;
+        }
+
+        /* --- Theory View Styles --- */
+        #theory-container h1 { text-align: center; color: #004D40; font-size: 2.2em; margin-bottom: 25px; padding-bottom: 10px; border-bottom: 4px solid #80CBC4; }
+        .main-content { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .section-box { border: 3px solid; border-radius: 12px; padding: 15px; display: flex; }
+        .section-box.green { border-color: #00695C; background-color: #E8F5E9; }
+        .section-box.orange { border-color: #E65100; background-color: #FFF3E0; grid-column: 1 / -1; }
+        .section-label { writing-mode: vertical-rl; text-orientation: mixed; transform: rotate(180deg); font-weight: bold; font-size: 1.4em; text-align: center; padding: 10px 5px; border-radius: 8px; margin-right: 15px; flex-shrink: 0; }
+        .label-positive, .label-negative { background-color: #A5D6A7; color: #1B5E20; }
+        .label-question, .label-short-answer { background-color: #FFCC80; color: #BF360C; }
+        table { width: 100%; border-collapse: collapse; }
+        td { padding: 4px 6px; vertical-align: middle; }
+        .form-box, .answer-box { border: 2px solid; background-color: #fff; padding: 5px 10px; margin: 2px 0; border-radius: 6px; display: inline-block; }
+        .full-form { border-color: #6495ED; background-color: #F0F8FF; }
+        .contracted-form { border-color: #B0C4DE; }
+        .working-box { border-color: #8FBC8F; font-weight: bold; }
+        .answer-box { border-color: #FFB74D; background-color: #FFF8E1; }
+        .ing-rules { margin-top: 25px; padding: 20px; border: 3px solid #696969; border-radius: 12px; background-color: #FAFAFA; }
+        .rule { display: flex; align-items: center; flex-wrap: wrap; margin-bottom: 15px; padding: 12px; border-radius: 8px; }
+        .rule-desc { font-weight: bold; margin-left: auto; color: #444; }
+        .verb-group { display: flex; align-items: center; margin-right: 20px; margin-bottom: 5px; }
+        .verb-box { font-weight: bold; padding: 6px 12px; border-radius: 6px; color: white; margin: 0 5px; }
+        .arrow { font-size: 1.5em; font-weight: bold; margin: 0 10px; }
+        .rule-red, .verb-red, .arrow-red { background-color: #FFEBEE; border-left: 6px solid #C62828; color: #C62828; } .verb-red { background-color: #C62828; color:white; }
+        .rule-blue, .verb-blue, .arrow-blue { background-color: #E3F2FD; border-left: 6px solid #1565C0; color: #1565C0; } .verb-blue { background-color: #1565C0; color:white; }
+        .rule-purple, .verb-purple, .arrow-purple { background-color: #F3E5F5; border-left: 6px solid #6A1B9A; color: #6A1B9A; } .verb-purple { background-color: #6A1B9A; color:white; }
+        #start-practice-btn { background-color: #00695C; }
+        #start-practice-btn:hover { background-color: #004D40; }
+
+        /* --- App View Styles --- */
+        #app-container { max-width: 800px; padding: 0; background: #E0F2F1; } /* Soft Teal */
+        .header { padding: 15px 25px; background-color: #00796B; color: white; display: flex; justify-content: space-between; align-items: center; border-radius: 15px 15px 0 0;}
+        .header h1 { font-size: 1.8em; margin: 0; color: white; border: none; padding: 0; }
+        .header .progress, .header .score { font-size: 1.1em; font-weight: bold; background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 20px; }
+        .video-container { background-color: #000; position: relative; max-width: 600px; margin: 20px auto; }
+        video { width: 100%; display: block; border-radius: 8px;}
+        .quiz-container { padding: 25px; }
+        .dialogue-line { margin-bottom: 20px; font-size: 1.2em; display: flex; align-items: center; flex-wrap: wrap; }
+        .dialogue-line select, .dialogue-line input { font-size: 1em; padding: 8px; margin: 0 8px; border: 2px solid #ccc; border-radius: 6px; transition: border 0.2s; }
+        .dialogue-line input { flex-grow: 1; }
+        .input-prompt-wrapper { display: flex; flex-direction: column; width: 100%; }
+        #input-prompt { font-size: 0.9em; color: #004D40; font-style: italic; margin-left: 10px; margin-top: 5px; }
+        .action-bar { padding: 20px 25px; border-top: 1px solid #B2DFDB; text-align: center; }
+        .action-bar button { font-size: 1.2em; font-weight: bold; color: white; padding: 12px 30px; border: none; border-radius: 8px; cursor: pointer; transition: background-color 0.3s; margin: 5px;}
+        #check-btn { background-color: #00796B; }
+        #check-btn:hover { background-color: #004D40; }
+        #next-btn { background-color: #388E3C; display: none; }
+        #next-btn:hover { background-color: #1B5E20; }
+        #skip-btn { background-color: #546E7A; }
+        #skip-btn:hover { background-color: #37474F; }
+        #show-answer-btn { background-color: #F57C00; display: none; }
+        #show-answer-btn:hover { background-color: #E65100; }
+        .feedback { margin-top: 15px; font-size: 1.2em; font-weight: bold; height: 25px; }
+        .correct { color: #2E7D32; }
+        .incorrect { color: #C62828; }
+        .incorrect-selection { border-color: #C62828 !important; border-width: 3px !important; }
+        
+        /* FIX 1: Info Icon moved to Intro, so style is now general */
+        #info-icon {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #4A90E2;
+            background-color: white;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            border: 2px solid #4A90E2;
+            position: absolute;
+            top: 25px;
+            right: 25px;
+        }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.5); }
+        .modal-content { background-color: #fefefe; margin: 15% auto; padding: 20px 30px; border: 1px solid #888; width: 80%; max-width: 500px; border-radius: 10px; position: relative; }
+        .close-button { color: #aaa; position: absolute; top: 10px; right: 20px; font-size: 28px; font-weight: bold; cursor: pointer; }
+        .close-button:hover, .close-button:focus { color: black; }
+
+        footer { text-align: center; padding: 20px; margin-top: 30px; color: #546E7A; font-size: 0.9em; }
+
+    </style>
+</head>
+<body>
+
+    <div id="intro-container" class="container">
+        <div id="info-icon">i</div>
+        <h1>Welcome to ActionEnglish!</h1>
+        <p>
+            On the next page, you will first see a complete guide to the <strong>Present Continuous</strong> tense. Review the rules carefully.
+            When you are ready, click the "Start Practice" button to begin the video exercises.
+        </p>
+        <p class="credit"><em>Created by Panagiotis Domvros, English and Drama Teacher</em></p>
+        <img id="intro-image" src="1.png" alt="A cartoon artist painting">
+        <br>
+        <button id="go-to-theory-btn" class="nav-button">Let's Go!</button>
+    </div>
+
+    <div id="theory-container" class="container" style="display: none;">
+        <button id="home-from-theory-btn" class="home-button">Home</button>
+        <h1>PRESENT CONTINUOUS &ndash; FORM</h1>
+        <div class="main-content">
+            <div class="section-box green"><div class="section-label label-positive">POSITIVE</div><div style="width:100%"><table><tr><td><span class="form-box full-form">I am</span> <span class="form-box contracted-form">I'm</span><br><span class="form-box full-form">You are</span> <span class="form-box contracted-form">You're</span><br><span class="form-box full-form">He is</span> <span class="form-box contracted-form">He's</span><br><span class="form-box full-form">She is</span> <span class="form-box contracted-form">She's</span><br><span class="form-box full-form">It is</span> <span class="form-box contracted-form">It's</span><br><span class="form-box full-form">We are</span> <span class="form-box contracted-form">We're</span><br><span class="form-box full-form">They are</span> <span class="form-box contracted-form">They're</span></td><td style="text-align: center;"><span class="form-box working-box">working.</span></td></tr></table></div></div>
+            <div class="section-box green"><div class="section-label label-negative">NEGATIVE</div><div style="width:100%"><table><tr><td><span class="form-box full-form">I am not</span> <span class="form-box contracted-form">I'm not</span><br><span class="form-box full-form">You are not</span> <span class="form-box contracted-form">You aren't</span><br><span class="form-box full-form">He is not</span> <span class="form-box contracted-form">He isn't</span><br><span class="form-box full-form">She is not</span> <span class="form-box contracted-form">She isn't</span><br><span class="form-box full-form">It is not</span> <span class="form-box contracted-form">It isn't</span><br><span class="form-box full-form">We are not</span> <span class="form-box contracted-form">We aren't</span><br><span class="form-box full-form">They are not</span> <span class="form-box contracted-form">They aren't</span></td><td style="text-align: center;"><span class="form-box working-box">working.</span></td></tr></table></div></div>
+            <div class="section-box orange"><div class="section-label label-question">QUESTION</div><div style="width:100%"><table><tr><td style="width:20%;"><span class="form-box full-form">Am I</span><br><span class="form-box full-form">Are you</span><br><span class="form-box full-form">Is he</span><br><span class="form-box full-form">Is she</span><br><span class="form-box full-form">Is it</span><br><span class="form-box full-form">Are we</span><br><span class="form-box full-form">Are they</span></td><td style="width:20%; text-align: left;"><span class="form-box working-box">working?</span></td><td><table style="width:100%;"><tr><td colspan="3" style="text-align:center; padding-bottom:10px;"><div class="section-label label-short-answer" style="writing-mode: horizontal-tb; transform: none; display: inline-block; padding: 5px 20px;">SHORT ANSWER</div></td></tr><tr><td width="33%"><span class="answer-box">Yes, I am.</span></td><td width="33%"><span class="answer-box">No, I am not.</span></td><td width="33%"><span class="answer-box">No, I'm not.</span></td></tr><tr><td><span class="answer-box">Yes, you are.</span></td><td><span class="answer-box">No, you are not.</span></td><td><span class="answer-box">No, you aren't.</span></td></tr><tr><td><span class="answer-box">Yes, he is.</span></td><td><span class="answer-box">No, he is not.</span></td><td><span class="answer-box">No, he isn't.</span></td></tr><tr><td><span class="answer-box">Yes, she is.</span></td><td><span class="answer-box">No, she is not.</span></td><td><span class="answer-box">No, she isn't.</span></td></tr><tr><td><span class="answer-box">Yes, it is.</span></td><td><span class="answer-box">No, it is not.</span></td><td><span class="answer-box">No, it isn't.</span></td></tr><tr><td><span class="answer-box">Yes, we are.</span></td><td><span class="answer-box">No, we are not.</span></td><td><span class="answer-box">No, we aren't.</span></td></tr><tr><td><span class="answer-box">Yes, they are.</span></td><td><span class="answer-box">No, they are not.</span></td><td><span class="answer-box">No, they aren't.</span></td></tr></table></td></tr></table></div></div>
+        </div>
+        <div class="ing-rules"><div class="rule rule-red"><div class="verb-group"><span class="verb-box verb-red">work</span><span class="arrow arrow-red">&rarr;</span><span class="verb-box verb-red">working</span></div><div class="verb-group"><span class="verb-box verb-red">study</span><span class="arrow arrow-red">&rarr;</span><span class="verb-box verb-red">studying</span></div><div class="rule-desc">GENERAL RULE: add -ing</div></div><div class="rule rule-blue"><div class="verb-group"><span class="verb-box verb-blue">live</span><span class="arrow arrow-blue">&rarr;</span><span class="verb-box verb-blue">living</span></div><div class="verb-group"><span class="verb-box verb-blue">make</span><span class="arrow arrow-blue">&rarr;</span><span class="verb-box verb-blue">making</span></div><div class="rule-desc">Consonant + -e: delete -e and add -ing</div></div><div class="rule rule-purple"><div class="verb-group"><span class="verb-box verb-purple">run</span><span class="arrow arrow-purple">&rarr;</span><span class="verb-box verb-purple">running</span></div><div class="verb-group"><span class="verb-box verb-purple">swim</span><span class="arrow arrow-purple">&rarr;</span><span class="verb-box verb-purple">swimming</span></div><div class="rule-desc">Consonant + vowel + consonant (stressed): double the consonant + -ing</div></div></div>
+        <button id="start-practice-btn" class="nav-button">Start Practice!</button>
+    </div>
+
+    <div id="app-container" class="container" style="display: none;">
+        <header class="header">
+            <button id="home-from-app-btn" class="home-button" style="position: static; margin-right: 15px;">Home</button>
+            <h1>ActionEnglish</h1>
+            <div class="progress" id="progress-indicator">Video 1 of 24</div>
+            <div class="score" id="score-indicator">Score: 0</div>
+        </header>
+        <div class="video-container"><video id="video-player" controls></video></div>
+        <div class="quiz-container">
+            <div class="dialogue-line"><span>What</span><select id="q-tobe"></select><select id="q-pronoun"></select><span>doing?</span></div>
+            <div class="dialogue-line"><select id="a1-tobe"></select><select id="a1-pronoun"></select><span id="wrong-verb-span"></span>?</div>
+            <div class="dialogue-line"><span>No,</span><select id="a2-pronoun"></select><select id="a2-contracted"></select>.</div>
+            <div class="dialogue-line input-prompt-wrapper">
+                <div>
+                    <span id="a3-pronoun-span"></span>
+                    <input type="text" id="correct-verb-input" placeholder="is/are + verb...">.
+                </div>
+                <small id="input-prompt"></small>
+            </div>
+        </div>
+        <div class="action-bar">
+            <button id="check-btn">Check Answer</button>
+            <button id="show-answer-btn">Show Answer</button>
+            <button id="skip-btn">Skip Video</button>
+            <button id="next-btn">Next Video</button>
+        </div>
+        <div class="feedback" id="feedback-message"></div>
+    </div>
+    
+    <div id="info-modal" class="modal">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <p>The 24 videos in this activity can be further used by the teacher for various other areas of practice, like description vocabulary, prepositions, comparisons etc.</p>
+        </div>
+    </div>
+
+    <footer>
+        ✨✍️ Devised by Panagiotis Domvros, English and Drama Teacher, All Rights Reserved ✍️✨
+    </footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const exercises = [
+            { videoNumber: 1, pronoun: 'he', correctVerbIng: 'is writing', wrongVerbIng: 'reading', promptText: '(write)' },
+            { videoNumber: 2, pronoun: 'she', correctVerbIng: 'is eating breakfast', wrongVerbIng: 'drinking', promptText: '(eat breakfast)' },
+            { videoNumber: 3, pronoun: 'they', correctVerbIng: 'are playing in the park', wrongVerbIng: 'studying', promptText: '(play in the park)' },
+            { videoNumber: 4, pronoun: 'he', correctVerbIng: 'is teaching english', wrongVerbIng: 'learning', promptText: '(teach English)' },
+            { videoNumber: 5, pronoun: 'they', correctVerbIng: 'are talking in the park', wrongVerbIng: 'shouting', promptText: '(talk in the park)' },
+            { videoNumber: 6, pronoun: 'they', correctVerbIng: 'are having a meal', wrongVerbIng: 'cooking', promptText: '(have a meal)' },
+            { videoNumber: 7, pronoun: 'she', correctVerbIng: 'is watching television', wrongVerbIng: 'listening', promptText: '(watch television)' },
+            { videoNumber: 8, pronoun: 'she', correctVerbIng: 'is working in her office', wrongVerbIng: 'sleeping', promptText: '(work in her office)' },
+            { videoNumber: 9, pronoun: 'he', correctVerbIng: 'is swimming in the swimming pool', wrongVerbIng: 'diving', promptText: '(swim in the swimming pool)' },
+            { videoNumber: 10, pronoun: 'they', correctVerbIng: 'are playing basketball', wrongVerbIng: 'watching', promptText: '(play basketball)' },
+            { videoNumber: 11, pronoun: 'she', correctVerbIng: 'is washing her hands before the operation', wrongVerbIng: 'drying', promptText: '(wash her hands before the operation)' },
+            { videoNumber: 12, pronoun: 'he', correctVerbIng: 'is singing in a concert', wrongVerbIng: 'talking', promptText: '(sing in a concert)' },
+            { videoNumber: 13, pronoun: 'she', correctVerbIng: 'is brushing her teeth in the bathroom', wrongVerbIng: 'washing', promptText: '(brush her teeth in the bathroom)' },
+            { videoNumber: 14, pronoun: 'it', correctVerbIng: 'is raining', wrongVerbIng: 'snowing', promptText: '(rain)' },
+            { videoNumber: 15, pronoun: 'they', correctVerbIng: 'are waiting for the bus', wrongVerbIng: 'walking', promptText: '(wait for the bus)' },
+            { videoNumber: 16, pronoun: 'they', correctVerbIng: 'are dancing', wrongVerbIng: 'jumping', promptText: '(dance)' },
+            { videoNumber: 17, pronoun: 'he', correctVerbIng: 'is sleeping', wrongVerbIng: 'reading', promptText: '(sleep)' },
+            { videoNumber: 18, pronoun: 'they', correctVerbIng: 'are cooking dinner', wrongVerbIng: 'cleaning', promptText: '(cook dinner)' },
+            { videoNumber: 19, pronoun: 'they', correctVerbIng: 'are building a house', wrongVerbIng: 'painting', promptText: '(build a house)' },
+            { videoNumber: 20, pronoun: 'she', correctVerbIng: 'is playing the guitar', wrongVerbIng: 'holding', promptText: '(play the guitar)' },
+            { videoNumber: 21, pronoun: 'he', correctVerbIng: 'is walking in the street', wrongVerbIng: 'running', promptText: '(walk in the street)' },
+            { videoNumber: 22, pronoun: 'he', correctVerbIng: 'is fighting hard', wrongVerbIng: 'arguing', promptText: '(fight hard)' },
+            { videoNumber: 23, pronoun: 'he', correctVerbIng: 'is testing his voice', wrongVerbIng: 'singing', promptText: '(test his voice)' },
+            { videoNumber: 24, pronoun: 'he', correctVerbIng: 'is visiting milan in italy', wrongVerbIng: 'leaving', promptText: '(visit Milan in Italy)' }
+        ];
+
+        // --- DOM ELEMENTS ---
+        const introContainer = document.getElementById('intro-container');
+        const theoryContainer = document.getElementById('theory-container');
+        const appContainer = document.getElementById('app-container');
+        const goToTheoryBtn = document.getElementById('go-to-theory-btn');
+        const startPracticeBtn = document.getElementById('start-practice-btn');
+        const homeFromTheoryBtn = document.getElementById('home-from-theory-btn');
+        const homeFromAppBtn = document.getElementById('home-from-app-btn');
+        const videoPlayer = document.getElementById('video-player');
+        const progressIndicator = document.getElementById('progress-indicator');
+        const scoreIndicator = document.getElementById('score-indicator');
+        const feedbackMessage = document.getElementById('feedback-message');
+        const checkBtn = document.getElementById('check-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const skipBtn = document.getElementById('skip-btn');
+        const showAnswerBtn = document.getElementById('show-answer-btn');
+        const q_tobe = document.getElementById('q-tobe');
+        const q_pronoun = document.getElementById('q-pronoun');
+        const a1_tobe = document.getElementById('a1-tobe');
+        const a1_pronoun = document.getElementById('a1-pronoun');
+        const wrongVerbSpan = document.getElementById('wrong-verb-span');
+        const a2_pronoun = document.getElementById('a2-pronoun');
+        const a2_contracted = document.getElementById('a2-contracted');
+        const a3_pronoun_span = document.getElementById('a3-pronoun-span');
+        const correctVerbInput = document.getElementById('correct-verb-input');
+        const inputPrompt = document.getElementById('input-prompt');
+        const allDropdowns = [q_tobe, q_pronoun, a1_tobe, a1_pronoun, a2_pronoun, a2_contracted];
+        const infoIcon = document.getElementById('info-icon');
+        const infoModal = document.getElementById('info-modal');
+        const closeButton = document.querySelector('.close-button');
+
+        // --- APP STATE ---
+        let currentExerciseIndex = 0;
+        let score = 0;
+
+        // --- FUNCTIONS ---
+        function loadExercise(index) {
+            const exercise = exercises[index];
+            
+            let videoFolder;
+            if (exercise.videoNumber <= 6) { videoFolder = 'Pres-Cont1'; } 
+            else if (exercise.videoNumber <= 12) { videoFolder = 'Pres-Cont2'; } 
+            else if (exercise.videoNumber <= 18) { videoFolder = 'Pres-Cont3'; } 
+            else { videoFolder = 'Pres-Cont4'; }
+            videoPlayer.src = `${videoFolder}/${exercise.videoNumber}.mp4`;
+
+            progressIndicator.textContent = `Video ${index + 1} of ${exercises.length}`;
+            feedbackMessage.textContent = '';
+            correctVerbInput.value = '';
+            correctVerbInput.classList.remove('incorrect-selection');
+            checkBtn.style.display = 'inline-block';
+            showAnswerBtn.style.display = 'none';
+            nextBtn.style.display = 'none';
+            allDropdowns.forEach(dd => dd.classList.remove('incorrect-selection'));
+
+            populateDropdown(q_tobe, ['is', 'are']);
+            populateDropdown(q_pronoun, ['he', 'she', 'it', 'they']);
+            populateDropdown(a1_tobe, ['Is', 'Are']);
+            populateDropdown(a1_pronoun, ['he', 'she', 'it', 'they']);
+            populateDropdown(a2_pronoun, ['he', 'she', 'it', 'they']);
+            populateDropdown(a2_contracted, ["isn't", "aren't"]);
+
+            wrongVerbSpan.textContent = exercise.wrongVerbIng;
+            a3_pronoun_span.textContent = capitalizeFirstLetter(exercise.pronoun);
+            inputPrompt.textContent = `Hint: ${exercise.promptText}`;
+        }
+
+        function populateDropdown(selectElement, options) {
+            selectElement.innerHTML = '';
+            options.forEach(option => {
+                const optionElement = document.createElement('option');
+                optionElement.value = option.toLowerCase();
+                optionElement.textContent = option;
+                selectElement.appendChild(optionElement);
+            });
+        }
+        
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        function checkAnswer() {
+            const exercise = exercises[currentExerciseIndex];
+            const isPlural = (exercise.pronoun === 'they');
+            const correctTobe = isPlural ? 'are' : 'is';
+            const correctContracted = isPlural ? "aren't" : "isn't";
+            let isFullyCorrect = true;
+
+            allDropdowns.forEach(dd => dd.classList.remove('incorrect-selection'));
+            correctVerbInput.classList.remove('incorrect-selection');
+            showAnswerBtn.style.display = 'none';
+
+            if (q_tobe.value !== correctTobe) { q_tobe.classList.add('incorrect-selection'); isFullyCorrect = false; }
+            if (q_pronoun.value !== exercise.pronoun) { q_pronoun.classList.add('incorrect-selection'); isFullyCorrect = false; }
+            if (a1_tobe.value !== correctTobe) { a1_tobe.classList.add('incorrect-selection'); isFullyCorrect = false; }
+            if (a1_pronoun.value !== exercise.pronoun) { a1_pronoun.classList.add('incorrect-selection'); isFullyCorrect = false; }
+            if (a2_pronoun.value !== exercise.pronoun) { a2_pronoun.classList.add('incorrect-selection'); isFullyCorrect = false; }
+            if (a2_contracted.value !== correctContracted) { a2_contracted.classList.add('incorrect-selection'); isFullyCorrect = false; }
+            
+            if (correctVerbInput.value.trim().toLowerCase() !== exercise.correctVerbIng) {
+                correctVerbInput.classList.add('incorrect-selection');
+                isFullyCorrect = false;
+            }
+
+            if (isFullyCorrect) {
+                feedbackMessage.textContent = 'Correct! Well done!';
+                feedbackMessage.className = 'feedback correct';
+                score += 10;
+                scoreIndicator.textContent = `Score: ${score}`;
+                checkBtn.style.display = 'none';
+                nextBtn.style.display = 'inline-block';
+            } else {
+                feedbackMessage.textContent = 'Not quite, check the red boxes or click "Show Answer".';
+                feedbackMessage.className = 'feedback incorrect';
+                showAnswerBtn.style.display = 'inline-block';
+            }
+        }
+        
+        function showTheAnswer() {
+            const exercise = exercises[currentExerciseIndex];
+            correctVerbInput.value = exercise.correctVerbIng;
+            correctVerbInput.classList.remove('incorrect-selection');
+            feedbackMessage.textContent = 'Here is the correct answer. Click "Next Video" to continue.';
+            feedbackMessage.className = 'feedback';
+            checkBtn.style.display = 'none';
+            showAnswerBtn.style.display = 'none';
+            nextBtn.style.display = 'inline-block';
+        }
+        
+        function nextExercise() {
+            currentExerciseIndex++;
+            if (currentExerciseIndex < exercises.length) {
+                loadExercise(currentExerciseIndex);
+            } else {
+                appContainer.innerHTML = `<div style="padding: 40px; text-align:center;"><h1>Congratulations!</h1><p style="font-size: 1.5em;">You have completed all exercises.<br>Your final score is: ${score}</p></div>`;
+            }
+        }
+
+        // FIX 2: Function to go home and reset the quiz
+        function goToHome() {
+            theoryContainer.style.display = 'none';
+            appContainer.style.display = 'none';
+            introContainer.style.display = 'block';
+            
+            // Reset quiz progress
+            if (currentExerciseIndex > 0 || score > 0) {
+                currentExerciseIndex = 0;
+                score = 0;
+                scoreIndicator.textContent = `Score: 0`;
+            }
+        }
+
+        // --- EVENT LISTENERS ---
+        goToTheoryBtn.addEventListener('click', () => {
+            introContainer.style.display = 'none';
+            theoryContainer.style.display = 'block';
+        });
+
+        startPracticeBtn.addEventListener('click', () => {
+            theoryContainer.style.display = 'none';
+            appContainer.style.display = 'block';
+            loadExercise(currentExerciseIndex);
+        });
+
+        homeFromTheoryBtn.addEventListener('click', goToHome);
+        homeFromAppBtn.addEventListener('click', goToHome);
+
+        checkBtn.addEventListener('click', checkAnswer);
+        nextBtn.addEventListener('click', nextExercise);
+        skipBtn.addEventListener('click', nextExercise);
+        showAnswerBtn.addEventListener('click', showTheAnswer);
+        
+        infoIcon.addEventListener('click', () => { infoModal.style.display = 'block'; });
+        closeButton.addEventListener('click', () => { infoModal.style.display = 'none'; });
+        window.addEventListener('click', (event) => {
+            if (event.target == infoModal) {
+                infoModal.style.display = 'none';
+            }
+        });
+    });
+</script>
+</body>
+</html>
